@@ -1,21 +1,15 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Inter } from 'next/font/google'
+import "./globals.css"
+import Layout from "@/components/Layout"
+import { Providers } from "@/components/Providers"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "CHAINBORN",
-  description: "The Newly ChainBorn",
-};
+  title: "Chainborn NFT",
+  description: "Mint your Chainborn NFT on the Arbitrum network",
+}
 
 export default function RootLayout({
   children,
@@ -24,11 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={inter.className}>
+        <Providers>
+          <Layout>{children}</Layout>
+        </Providers>
       </body>
     </html>
-  );
+  )
 }
+
