@@ -1,15 +1,55 @@
 'use client'
 
-import { Web3OnboardProvider, init } from '@web3-onboard/react'
-import injectedModule from '@web3-onboard/injected-wallets'
 
-const injected = injectedModule()
+import { Web3OnboardProvider, init } from '@web3-onboard/react';
+import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets';
+// import metamaskSDK from "@web3-onboard/metamask";
+// import trustModule from '@web3-onboard/trust'
+// import okxModule from '@web3-onboard/okx' 
+// import walletConnectModule from '@web3-onboard/walletconnect'
+// import coinbaseModule from '@web3-onboard/coinbase'
+
+// const injected = injectedModule();
+const injected = injectedModule({
+  filter: {
+    [ProviderLabel.Detected]: ['desktop', 'tablet'],
+  },
+});
+
+/* const metamaskSDKWallet = metamaskSDK({options: {
+  extensionOnly: false,
+  dappMetadata: {
+    name: 'Demo Web3Onboard'
+  }
+}}) 
+
+const trustWallet = trustModule()
+const okx = okxModule()
+const coinbase = coinbaseModule()
+// const walletConnect = walletConnectModule()
+
+const appMetadata = {
+  name: 'Connect Wallet Example',
+  icon: '<svg>My App Icon</svg>',
+  description: 'Example showcasing how to connect a wallet.',
+  recommendedInjectedWallets: [
+    { name: 'MetaMask', url: 'https://metamask.io' },
+    { name: 'Coinbase', url: 'https://wallet.coinbase.com/' }
+  ]
+} */
 
 const web3Onboard = init({
-  wallets: [injected],
+  wallets: [
+    injected,
+    // metamaskSDKWallet,
+    // okx,
+    // trustWallet,
+    // coinbase
+    // walletConnect
+  ],
   chains: [
     {
-      id: '0xaa36a7',
+      id: '11155111',  //'0xaa36a7',
       // id: '84532',
       token: 'ETH',
       label: 'Sepolia',
@@ -29,3 +69,29 @@ export function Providers({ children }: { children: React.ReactNode }) {
   )
 }
 
+
+
+/*
+import { ThirdwebProvider } from "@thirdweb-dev/react/evm";
+import {  metamaskWallet, zerionWallet, coinbaseWallet, walletConnect, rabbyWallet, rainbowWallet } from "@thirdweb-dev/react";
+import { Sepolia } from "@thirdweb-dev/chains";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThirdwebProvider 
+      activeChain={Sepolia}
+      // clientId="your-client-id" // Replace with your actual client ID from thirdweb
+      supportedWallets={[
+        metamaskWallet(),
+        // zerionWallet(),
+        coinbaseWallet(),
+        walletConnect(),
+        // rabbyWallet(),
+        // rainbowWallet()
+      ]}
+    >
+      {children}
+    </ThirdwebProvider>
+  )
+}
+*/

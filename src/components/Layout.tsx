@@ -4,11 +4,18 @@
 import React from 'react';
 import Link from 'next/link';
 import { useConnectWallet } from '@web3-onboard/react';
+// import ConnectWallet from './ConnectButton';
+// import { ConnectWallet } from '@thirdweb-dev/react/evm';
+// import {  useAddress, useDisconnect } from "@thirdweb-dev/react/evm";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   
+  // const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  // const wallet = useAddress()
+  // const disconnect = useDisconnect()
+
 
   return (
     <div className="min-h-screen flex flex-col bg-secondary text-gray-800">
@@ -18,8 +25,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             Chainborn
           </Link>
           <ul className="flex space-x-4">
-            <li><Link href="/" className="hover:text-secondary-dark transition-colors">Home</Link></li>
-            <li><Link href="/mint" className="hover:text-secondary-dark transition-colors">Mint</Link></li>
+            {/* <li><Link href="/" className="hover:text-secondary-dark transition-colors">Home</Link></li>
+            <li><Link href="/mint" className="hover:text-secondary-dark transition-colors">Mint</Link></li> */}
 
             <li>
               {!wallet ? (
@@ -30,13 +37,25 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               >
                 {connecting ? 'Connecting...' : 'Connect '}
               </button>
+              // <ConnectWallet />
               ) : (
                 <button
             onClick={() => disconnect({ label: wallet.label })}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors"
           >
             Disconnect
-          </button>
+          </button> 
+      //     <ConnectWallet 
+      //     theme="dark"
+      //     btnTitle="Connect Wallet"
+      //   />
+      // ) : (
+      //   <button
+      //     onClick={() => disconnect()}
+      //     className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors"
+      //   >
+      //     Disconnect
+      //   </button>
               )}
             </li>
           </ul>

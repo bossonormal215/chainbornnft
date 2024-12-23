@@ -1,10 +1,89 @@
+/*
+import { useState, useEffect } from 'react';
+import { useContract, useContractRead } from '@thirdweb-dev/react/evm';
+import { CHAINBORN_CONTRACT } from '@/config/contracts';
+import { ethers } from 'ethers';
+
+export function useChainbornContract() {
+  const { contract } = useContract(
+    CHAINBORN_CONTRACT.address,
+    CHAINBORN_CONTRACT.abi
+  );
+
+  const [contractState, setContractState] = useState({
+    totalSupply: 0,
+    maxSupply: 0,
+    mintPrice: '0',
+    isPublicSaleActive: false,
+    isPresaleActive: false,
+    isRevealed: false,
+  });
+
+  const { data: totalSupply } = useContractRead(contract, 'totalSupply');
+  const { data: maxSupply } = useContractRead(contract, 'MAX_SUPPLY');
+  const { data: mintPrice } = useContractRead(contract, 'MINT_PRICE');
+  const { data: isPublicSaleActive } = useContractRead(
+    contract,
+    'isPublicSaleActive'
+  );
+  const { data: isPresaleActive } = useContractRead(
+    contract,
+    'isPresaleActive'
+  );
+  const { data: isRevealed } = useContractRead(contract, 'isRevealed');
+
+  useEffect(() => {
+    if (
+      totalSupply &&
+      maxSupply &&
+      mintPrice &&
+      isPublicSaleActive !== undefined &&
+      isPresaleActive !== undefined &&
+      isRevealed !== undefined
+    ) {
+      setContractState({
+        totalSupply: totalSupply.toNumber(),
+        maxSupply: maxSupply.toNumber(),
+        mintPrice: ethers.utils.formatEther(mintPrice),
+        isPublicSaleActive,
+        isPresaleActive,
+        isRevealed,
+      });
+    }
+  }, [
+    totalSupply,
+    maxSupply,
+    mintPrice,
+    isPublicSaleActive,
+    isPresaleActive,
+    isRevealed,
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      contract?.call('totalSupply');
+      contract?.call('isPublicSaleActive');
+      contract?.call('isPresaleActive');
+      contract?.call('isRevealed');
+    }, 10000); // Refresh every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [contract]);
+
+  return contractState;
+}
+*/
+
+// USING @web3-onboard
+
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { CHAINBORN_CONTRACT } from '@/config/contracts';
 import { useConnectWallet } from '@web3-onboard/react';
 
 export function useChainbornContract() {
-  const [{ wallet }] = useConnectWallet();
+  const [{ wallet }] = useConnectWallet(); //web3-onboard
+
   const [contractState, setContractState] = useState({
     totalSupply: 0,
     maxSupply: 0,
