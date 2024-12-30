@@ -1,12 +1,75 @@
 export const CHAINBORN_CONTRACT = {
   // address: '0xb013C49AB955770B8dDdc3DFF627879998c809a6',
-  address: '0x196F7638B53c2a1adA87e7689e67fd510350e744',
+  address: '0x31bc76EB53d7264f35a3F36711a741Cb26F1edD3',
   abi: [
+    { inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+    { inputs: [], name: 'ERC721EnumerableForbiddenBatchMint', type: 'error' },
     {
-      inputs: [],
-      stateMutability: 'nonpayable',
-      type: 'constructor',
+      inputs: [
+        { internalType: 'address', name: 'sender', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        { internalType: 'address', name: 'owner', type: 'address' },
+      ],
+      name: 'ERC721IncorrectOwner',
+      type: 'error',
     },
+    {
+      inputs: [
+        { internalType: 'address', name: 'operator', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      ],
+      name: 'ERC721InsufficientApproval',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'approver', type: 'address' }],
+      name: 'ERC721InvalidApprover',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'operator', type: 'address' }],
+      name: 'ERC721InvalidOperator',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+      name: 'ERC721InvalidOwner',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'receiver', type: 'address' }],
+      name: 'ERC721InvalidReceiver',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'sender', type: 'address' }],
+      name: 'ERC721InvalidSender',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+      name: 'ERC721NonexistentToken',
+      type: 'error',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: 'owner', type: 'address' },
+        { internalType: 'uint256', name: 'index', type: 'uint256' },
+      ],
+      name: 'ERC721OutOfBoundsIndex',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+      name: 'OwnableInvalidOwner',
+      type: 'error',
+    },
+    {
+      inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+      name: 'OwnableUnauthorizedAccount',
+      type: 'error',
+    },
+    { inputs: [], name: 'ReentrancyGuardReentrantCall', type: 'error' },
     {
       anonymous: false,
       inputs: [
@@ -127,15 +190,29 @@ export const CHAINBORN_CONTRACT = {
         {
           indexed: true,
           internalType: 'address',
-          name: 'from',
+          name: 'recipient',
           type: 'address',
         },
         {
+          indexed: false,
+          internalType: 'uint96',
+          name: 'percentage',
+          type: 'uint96',
+        },
+      ],
+      name: 'RoyaltiesSet',
+      type: 'event',
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
           indexed: true,
           internalType: 'address',
-          name: 'to',
+          name: 'from',
           type: 'address',
         },
+        { indexed: true, internalType: 'address', name: 'to', type: 'address' },
         {
           indexed: true,
           internalType: 'uint256',
@@ -149,49 +226,27 @@ export const CHAINBORN_CONTRACT = {
     {
       inputs: [],
       name: 'MAX_MINT_PER_TX',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'MAX_SUPPLY',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'MINT_PRICE',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [
-        {
-          internalType: 'address[]',
-          name: 'addresses',
-          type: 'address[]',
-        },
+        { internalType: 'address[]', name: 'addresses', type: 'address[]' },
       ],
       name: 'addToWhitelist',
       outputs: [],
@@ -200,16 +255,8 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'to',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
       ],
       name: 'approve',
       outputs: [],
@@ -217,114 +264,52 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'address',
-          name: 'owner',
-          type: 'address',
-        },
-      ],
+      inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
       name: 'balanceOf',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-      ],
+      inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
       name: 'getApproved',
-      outputs: [
-        {
-          internalType: 'address',
-          name: '',
-          type: 'address',
-        },
-      ],
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'owner',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
-          name: 'operator',
-          type: 'address',
-        },
+        { internalType: 'address', name: 'owner', type: 'address' },
+        { internalType: 'address', name: 'operator', type: 'address' },
       ],
       name: 'isApprovedForAll',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'isPresaleActive',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'isPublicSaleActive',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'isRevealed',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'quantity',
-          type: 'uint256',
-        },
-      ],
+      inputs: [{ internalType: 'uint256', name: 'quantity', type: 'uint256' }],
       name: 'mint',
       outputs: [],
       stateMutability: 'payable',
@@ -333,45 +318,21 @@ export const CHAINBORN_CONTRACT = {
     {
       inputs: [],
       name: 'name',
-      outputs: [
-        {
-          internalType: 'string',
-          name: '',
-          type: 'string',
-        },
-      ],
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'owner',
-      outputs: [
-        {
-          internalType: 'address',
-          name: '',
-          type: 'address',
-        },
-      ],
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-      ],
+      inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
       name: 'ownerOf',
-      outputs: [
-        {
-          internalType: 'address',
-          name: '',
-          type: 'address',
-        },
-      ],
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
       stateMutability: 'view',
       type: 'function',
     },
@@ -391,21 +352,22 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'from',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
-          name: 'to',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        { internalType: 'uint256', name: 'salePrice', type: 'uint256' },
+      ],
+      name: 'royaltyInfo',
+      outputs: [
+        { internalType: 'address', name: 'receiver', type: 'address' },
+        { internalType: 'uint256', name: 'royaltyAmount', type: 'uint256' },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'address', name: 'from', type: 'address' },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
       ],
       name: 'safeTransferFrom',
       outputs: [],
@@ -414,26 +376,10 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'from',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
-          name: 'to',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-        {
-          internalType: 'bytes',
-          name: 'data',
-          type: 'bytes',
-        },
+        { internalType: 'address', name: 'from', type: 'address' },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        { internalType: 'bytes', name: 'data', type: 'bytes' },
       ],
       name: 'safeTransferFrom',
       outputs: [],
@@ -442,16 +388,8 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'operator',
-          type: 'address',
-        },
-        {
-          internalType: 'bool',
-          name: 'approved',
-          type: 'bool',
-        },
+        { internalType: 'address', name: 'operator', type: 'address' },
+        { internalType: 'bool', name: 'approved', type: 'bool' },
       ],
       name: 'setApprovalForAll',
       outputs: [],
@@ -459,13 +397,7 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'string',
-          name: '_newBaseURI',
-          type: 'string',
-        },
-      ],
+      inputs: [{ internalType: 'string', name: '_newBaseURI', type: 'string' }],
       name: 'setBaseURI',
       outputs: [],
       stateMutability: 'nonpayable',
@@ -473,11 +405,7 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'string',
-          name: '_notRevealedURI',
-          type: 'string',
-        },
+        { internalType: 'string', name: '_notRevealedURI', type: 'string' },
       ],
       name: 'setNotRevealedURI',
       outputs: [],
@@ -486,16 +414,18 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-        {
-          internalType: 'string',
-          name: 'hash',
-          type: 'string',
-        },
+        { internalType: 'address', name: 'recipient', type: 'address' },
+        { internalType: 'uint96', name: 'percentage', type: 'uint96' },
+      ],
+      name: 'setRoyalties',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+        { internalType: 'string', name: 'hash', type: 'string' },
       ],
       name: 'setTokenMetadataHash',
       outputs: [],
@@ -503,34 +433,16 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'bytes4',
-          name: 'interfaceId',
-          type: 'bytes4',
-        },
-      ],
+      inputs: [{ internalType: 'bytes4', name: 'interfaceId', type: 'bytes4' }],
       name: 'supportsInterface',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'symbol',
-      outputs: [
-        {
-          internalType: 'string',
-          name: '',
-          type: 'string',
-        },
-      ],
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
       stateMutability: 'view',
       type: 'function',
     },
@@ -549,97 +461,41 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'index',
-          type: 'uint256',
-        },
-      ],
+      inputs: [{ internalType: 'uint256', name: 'index', type: 'uint256' }],
       name: 'tokenByIndex',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'owner',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'index',
-          type: 'uint256',
-        },
+        { internalType: 'address', name: 'owner', type: 'address' },
+        { internalType: 'uint256', name: 'index', type: 'uint256' },
       ],
       name: 'tokenOfOwnerByIndex',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
-      ],
+      inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
       name: 'tokenURI',
-      outputs: [
-        {
-          internalType: 'string',
-          name: '',
-          type: 'string',
-        },
-      ],
+      outputs: [{ internalType: 'string', name: '', type: 'string' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [],
       name: 'totalSupply',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
+      outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
       inputs: [
-        {
-          internalType: 'address',
-          name: 'from',
-          type: 'address',
-        },
-        {
-          internalType: 'address',
-          name: 'to',
-          type: 'address',
-        },
-        {
-          internalType: 'uint256',
-          name: 'tokenId',
-          type: 'uint256',
-        },
+        { internalType: 'address', name: 'from', type: 'address' },
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
       ],
       name: 'transferFrom',
       outputs: [],
@@ -647,13 +503,7 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'address',
-          name: 'newOwner',
-          type: 'address',
-        },
-      ],
+      inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
       name: 'transferOwnership',
       outputs: [],
       stateMutability: 'nonpayable',
@@ -667,26 +517,14 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'address',
-          name: '',
-          type: 'address',
-        },
-      ],
+      inputs: [{ internalType: 'address', name: '', type: 'address' }],
       name: 'whitelist',
-      outputs: [
-        {
-          internalType: 'bool',
-          name: '',
-          type: 'bool',
-        },
-      ],
+      outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
       stateMutability: 'view',
       type: 'function',
     },
     {
-      inputs: [],
+      inputs: [{ internalType: 'uint256', name: 'quantity', type: 'uint256' }],
       name: 'whitelistMint',
       outputs: [],
       stateMutability: 'payable',

@@ -46,7 +46,7 @@ export default function Mint() {
 
       let tx;
       if (isWhitelist) {
-        tx = await contract.whitelistMint({ value: ethers.utils.parseEther('0.03001') });
+        tx = await contract.whitelistMint(1, { value: ethers.utils.parseEther('0.03001') });
       } else {
         tx = await contract.mint(1, { value: ethers.utils.parseEther('0.03001') });
       }
