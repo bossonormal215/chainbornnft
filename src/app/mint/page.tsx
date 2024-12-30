@@ -144,3 +144,6 @@ export default function Mint() {
   );
 }
 
+
+// git commit -m "Deploymet"
+// git push -u origin main
