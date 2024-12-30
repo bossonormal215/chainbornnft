@@ -57,6 +57,12 @@ const web3Onboard = init({
       // rpcUrl: 'https://sepolia.infura.io/v3/bc3fba1bbc6a4ab7a4ec1964d16eb8ff'
       rpcUrl: 'https://rpc.sepolia.org'
       // rpcUrl: 'base-sepolia.blockscout.com/tx/{HASH}'
+    },
+    {
+      id: '0x2b74', //11124',
+      token: 'ETH',
+      label: 'Abstract Testnet',
+      rpcUrl: 'https://api.testnet.abs.xyz'
     }
   ]
 })
