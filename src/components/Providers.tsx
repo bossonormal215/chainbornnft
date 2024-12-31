@@ -1,6 +1,6 @@
 'use client'
 
-
+/*
 import { Web3OnboardProvider, init } from '@web3-onboard/react';
 import injectedModule, { ProviderLabel } from '@web3-onboard/injected-wallets';
 // import metamaskSDK from "@web3-onboard/metamask";
@@ -36,7 +36,7 @@ const appMetadata = {
     { name: 'MetaMask', url: 'https://metamask.io' },
     { name: 'Coinbase', url: 'https://wallet.coinbase.com/' }
   ]
-} */
+} 
 
 const web3Onboard = init({
   wallets: [
@@ -74,30 +74,52 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </Web3OnboardProvider>
   )
 }
+*/
 
 
 
-/*
 import { ThirdwebProvider } from "@thirdweb-dev/react/evm";
-import {  metamaskWallet, zerionWallet, coinbaseWallet, walletConnect, rabbyWallet, rainbowWallet } from "@thirdweb-dev/react";
-import { Sepolia } from "@thirdweb-dev/chains";
+import { embeddedWallet, metamaskWallet, zerionWallet, coinbaseWallet, walletConnect, rabbyWallet, rainbowWallet } from "@thirdweb-dev/react";
+// import { Sepolia } from "@thirdweb-dev/chains";
+// import { abstractTestnet } from "thirdweb/chains";
+
+const activeChain = {
+  chainId: 11124, // Replace with actual Abstract testnet chain ID
+  rpc: ["https://api.testnet.abs.xyz", "api.testnet.abs.xyz"],
+  nativeCurrency: {
+    decimals: 18,
+    name: "Abstract",
+    symbol: "ABS",
+  },
+  shortName: "abs",
+  slug: "abstract",
+  testnet: true,
+  chain: "Abstract",
+  name: "Abstract Testnet",
+};
+
+// const activeChain = 'abstractTestnet';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThirdwebProvider 
-      activeChain={Sepolia}
-      // clientId="your-client-id" // Replace with your actual client ID from thirdweb
+    <ThirdwebProvider
+      activeChain={activeChain}
+      // supportedChains={[abstractTestnet]}
+      autoSwitch={true}
       supportedWallets={[
+        embeddedWallet(),
         metamaskWallet(),
-        // zerionWallet(),
+        zerionWallet(),
         coinbaseWallet(),
         walletConnect(),
-        // rabbyWallet(),
-        // rainbowWallet()
+        rabbyWallet(),
+        rainbowWallet()
       ]}
     >
       {children}
     </ThirdwebProvider>
   )
 }
-*/
+
+
+

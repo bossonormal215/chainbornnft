@@ -32,17 +32,27 @@ export function Notification({ message, type, onClose }: NotificationProps) {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ opacity: 0, y: -50 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
-                    className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2`}
+                    exit={{ opacity: 0, y: -20 }}
+                    className={`
+                        fixed top-20 left-4 right-4 md:left-1/2 md:right-auto 
+                        md:transform md:-translate-x-1/2
+                        ${bgColor} text-white px-3 py-2 rounded-lg shadow-lg 
+                        flex items-center gap-2 z-[100] 
+                        md:max-w-[400px] mx-auto
+                        break-words
+                    `}
                 >
-                    <span>{message}</span>
+                    <span className="text-xs md:text-sm font-medium flex-1 text-center">
+                        {message}
+                    </span>
                     <button
                         onClick={() => setIsVisible(false)}
-                        className="p-1 hover:bg-white/20 rounded-full"
+                        className="p-1 hover:bg-white/20 rounded-full flex-shrink-0 transition-colors"
+                        aria-label="Close notification"
                     >
-                        <XMarkIcon className="h-5 w-5" />
+                        <XMarkIcon className="h-3 w-3 md:h-4 md:w-4" />
                     </button>
                 </motion.div>
             )}

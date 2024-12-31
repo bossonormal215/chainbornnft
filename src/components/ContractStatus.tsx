@@ -24,17 +24,21 @@ export function ContractStatus() {
                 <div>
                     <p className="text-gray-400">Total Minted</p>
                     <p className="text-2xl font-bold">
-                        {totalSupply} / {maxSupply}
+                        {totalSupply === null ? (
+                            <span className="animate-pulse">Loading...</span>
+                        ) : (
+                            `${totalSupply} / ${maxSupply}`
+                        )}
                     </p>
                 </div>
                 <div>
                     <p className="text-gray-400">Mint Price</p>
-                    <p className="text-2xl font-bold">{mintPrice} ETH</p>
-                </div>
-                <div>
-                    <p className="text-gray-400">Public Sale</p>
-                    <p className={`font-bold ${isPublicSaleActive ? 'text-green-500' : 'text-red-500'}`}>
-                        {isPublicSaleActive ? 'Active' : 'Inactive'}
+                    <p className="text-2xl font-bold">
+                        {mintPrice === '0' ? (
+                            <span className="animate-pulse">Loading...</span>
+                        ) : (
+                            `${mintPrice} ETH`
+                        )}
                     </p>
                 </div>
                 <div>
@@ -43,8 +47,13 @@ export function ContractStatus() {
                         {isPresaleActive ? 'Active' : 'Inactive'}
                     </p>
                 </div>
+                <div>
+                    <p className="text-gray-400">Public Sale</p>
+                    <p className={`font-bold ${isPublicSaleActive ? 'text-green-500' : 'text-red-500'}`}>
+                        {isPublicSaleActive ? 'Active' : 'Inactive'}
+                    </p>
+                </div>
             </div>
-           
         </motion.div>
     );
 } 
