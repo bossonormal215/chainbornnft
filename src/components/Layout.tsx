@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ConnectWallet } from "@thirdweb-dev/react";
+import chainborn from "../app/images/chainborn.png";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // const address = useAddress();
@@ -32,7 +33,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   title: "Welcome to Chainborn",
                   subtitle: "Connect your wallet to get started",
                   img: {
-                    src: "/images/chainborn.png",
+                    // src: "/images/chainborn.png",
+                    src: "../app/images/chainborn.png",
                     width: 150,
                     height: 150,
                   },

@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import chainborn from "../app/images/chainborn.png";
+
 export function HeroSection() {
     return (
         <div className="relative min-h-screen flex items-center">
@@ -47,7 +49,8 @@ export function HeroSection() {
                     >
                         <div className="relative w-full aspect-square">
                             <Image
-                                src="/images/chainborn.png"
+                                // src="/images/chainborn.png"
+                                src={chainborn}
                                 alt="Chainborn NFT Preview"
                                 fill
                                 className="rounded-2xl shadow-2xl"

@@ -72,7 +72,7 @@ export default function Mint() {
         setError('Presale is currently inactive.');
       }
       else if (err.message.includes('denied') || err.code === 'ACTION_REJECTED') {
-        setError('Transaction Denied by YOU, TRY AGAIN')
+        setError('User Rejected Transaction, TRY AGAIN')
       }
       else {
         setError('An unexpected error occurred during minting. Please try again later.');
