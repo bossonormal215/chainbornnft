@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { ConnectWallet } from "@thirdweb-dev/react";
-import chainborn from "../app/images/chainborn.png";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // const address = useAddress();
