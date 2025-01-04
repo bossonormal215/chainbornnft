@@ -1,21 +1,18 @@
-'use client'
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { ConnectWallet } from "@thirdweb-dev/react";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // const address = useAddress();
-
   return (
     <div className="min-h-screen flex flex-col bg-black text-gray-800">
-      <header className="sticky top-0 z-50 bg-primary text-white p-4">
-        <nav className="container mx-auto flex justify-between items-center">
+      <header className="sticky top-0 z-50 bg-green-500 text-white p-4">
+        <nav className="flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold">
             Chainborn
           </Link>
           <ul className="flex items-center space-x-6">
-            
             <li>
               <ConnectWallet
                 theme="dark"
@@ -32,26 +29,24 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                   title: "Welcome to Chainborn",
                   subtitle: "Connect your wallet to get started",
                   img: {
-                    // src: "/images/chainborn.png",
                     src: "../app/images/chainborn.png",
                     width: 150,
                     height: 150,
                   },
                 }}
-                modalTitleIconUrl="/images/chainborn.png"
-              // displayBalance={false}
+                modalTitleIconUrl="../app/images/chainborn.png"
               />
             </li>
           </ul>
         </nav>
       </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow w-full">
         {children}
       </main>
 
-      <footer className="bg-primary text-white p-4 mt-8">
-        <div className="container mx-auto text-center">
+      <footer className="bg-green-500 text-white p-4 mt-8">
+        <div className="text-center">
           <div className="flex justify-center space-x-4 mb-4">
             <a
               href="https://x.com/ChainBornAb"
@@ -79,7 +74,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </a>
           </div>
           <p className="text-sm text-gray-400">
-            &copy; 2024 Chainborn. All rights reserved.
+            &copy; 2025 Chainborn. All rights reserved.
           </p>
         </div>
       </footer>
@@ -88,4 +83,3 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default Layout;
-

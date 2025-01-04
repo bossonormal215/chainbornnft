@@ -1,214 +1,176 @@
+
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { ethers } from 'ethers';
-// import { useConnectWallet } from '@web3-onboard/react';
-import { ContractStatus } from '@/components/ContractStatus';
+import { ConnectWallet, useSigner, useAddress } from '@thirdweb-dev/react/evm';
 import { CHAINBORN_CONTRACT } from '@/config/contracts';
 import { useChainbornContract } from '@/hooks/useChainbornContract';
-import { ConnectWallet, useSigner, useAddress } from '@thirdweb-dev/react/evm';
 import { Notification } from '@/components/Notification';
+import Image from 'next/image';
+import chainbornImage from '/src/app/images/chainborn2.png';
 
-const CONTRACT_ADDRESS = CHAINBORN_CONTRACT.address
-const ABI = CHAINBORN_CONTRACT.abi
+const CONTRACT_ADDRESS = CHAINBORN_CONTRACT.address;
+const ABI = CHAINBORN_CONTRACT.abi;
 
 export default function Mint() {
-  // const [{ wallet, connecting }, connect] = useConnectWallet();
-  const wallet = useAddress();
-  const signer = useSigner();
-  const [minting, setMinting] = useState(false);
-  const [error, setError] = useState('');
-  const [isMintSuccess, setIsMintSuccess] = useState(false);
-  const [successMintMessage, setSuccessMintMessage] = useState('')
-  const { isPresaleActive, isPublicSaleActive, mintPrice } = useChainbornContract()
+    const wallet = useAddress();
+    const signer = useSigner();
+    const [minting, setMinting] = useState(false);
+    const [error, setError] = useState('');
+    const [isMintSuccess, setIsMintSuccess] = useState(false);
+    const [successMintMessage, setSuccessMintMessage] = useState('');
+    const { isPresaleActive, isPublicSaleActive, mintPrice, totalSupply, maxSupply } = useChainbornContract();
 
-  const mintNFT = async (isWhitelist: boolean) => {
-    if (!wallet) {
-      setError('Please connect your wallet first.');
-      return;
-    }
+    const mintNFT = async (isWhitelist: boolean) => {
+        if (!wallet) {
+            setError('Please connect your wallet first.');
+            return;
+        }
 
-    if (!signer) {
-      setError('Signer not available. Please try reconnecting your wallet.');
-      return;
-    }
+        if (!signer) {
+            setError('Signer not available. Please try reconnecting your wallet.');
+            return;
+        }
 
-    setMinting(true);
-    setError('');
+        setMinting(true);
+        setError('');
 
-    try {
-      // const provider = new ethers.providers.Web3Provider(wallet.provider);
-      // const signer = provider.getSigner();
-      // const signer = useSigner()
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+        try {
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+            const mintValue = ethers.utils.parseEther(mintPrice);
+            const tx = await contract[isWhitelist ? 'whitelistMint' : 'mint'](1, { value: mintValue });
+            await tx.wait(1);
+            setIsMintSuccess(true);
+            setSuccessMintMessage('Successfully Minted A New CHAINBORN NFT');
+            setTimeout(() => setIsMintSuccess(false), 15000);
+        } catch (err: any) {
+            console.error('Minting error:', err);
+            if (err.code === 'INSUFFICIENT_FUNDS') {
+                setError('You do not have enough ETH to cover the minting cost.');
+            } else if (err.message.includes('whitelist')) {
+                setError('You are not whitelisted for the presale mint.');
+            } else if (err.message.includes('Public sale is not active')) {
+                setError('Public sale is currently inactive.');
+            } else if (err.message.includes('Presale is not active')) {
+                setError('Presale is currently inactive.');
+            } else if (err.message.includes('denied') || err.code === 'ACTION_REJECTED') {
+                setError('User Rejected Transaction, TRY AGAIN');
+            } else {
+                setError('An unexpected error occurred during minting. Please try again later.');
+            }
+        } finally {
+            setMinting(false);
+        }
+    };
 
-      let tx;
-      const mintValue = ethers.utils.parseEther(mintPrice);
-      if (isWhitelist) {
-        // tx = await contract.whitelistMint(1, { value: ethers.utils.parseEther('0.03001') });
-        tx = await contract.whitelistMint(1, { value: mintValue });
-      } else {
-        // tx = await contract.mint(1, { value: ethers.utils.parseEther('0.03001') });
-        tx = await contract.mint(1, { value: mintValue });
-      }
-
-      await tx.wait(1);
-      setIsMintSuccess(true);
-      // {setTimeout(() => alert('NFT minted successfully!'), 5000)};
-      setSuccessMintMessage('Successfully Minted A New CHAINBORN NFT');
-      // setIsMintSuccess(false);
-      setTimeout(() => setIsMintSuccess(false), 15000)
-    } catch (err: any) {
-      // setError(err.message || 'An error occurred while minting.');
-      console.error('Minting error:', err);
-      if (err.code === 'INSUFFICIENT_FUNDS') {
-        setError('You do not have enough ETH to cover the minting cost.');
-      } else if (err.message.includes('whitelist')) {
-        setError('You are not whitelisted for the presale mint.');
-      } else if (err.message.includes('Public sale is not active')) {
-        setError('Public sale is currently inactive.');
-      } else if (err.message.includes('Presale is not active')) {
-        setError('Presale is currently inactive.');
-      }
-      else if (err.message.includes('denied') || err.code === 'ACTION_REJECTED') {
-        setError('User Rejected Transaction, TRY AGAIN')
-      }
-      else {
-        setError('An unexpected error occurred during minting. Please try again later.');
-      }
-    } finally {
-      setMinting(false);
-    }
-  };
-
-
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center justify-center min-h-screen py-2"
-      >
-
-        {/* <h1 className="text-4xl font-bold text-primary mb-8">Mint Your Chainborn NFT</h1> */}
-        <h1 className="text-4xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">Mint Your Chainborn NFT</h1>
-        {/* <section className="py-20"> */}
-        <section className="py-20 w-full max-w-4xl mx-auto px-4">
-          {/* <div className="container mx-auto px-4"> */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            // className="max-w-3xl mx-auto text-center"
-            className="text-center"
-          >
-            <ContractStatus />
-
-            <div className="mt-8">
-              {!wallet ? (
-                // <button
-                //   onClick={() => connect()}
-                //   disabled={connecting}
-                //   className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded transition-colors"
-                // >
-                //   {connecting ? 'Connecting...' : 'Connect Wallet'}
-                // </button>
-                <ConnectWallet
-                  theme="dark"
-                  btnTitle='Connect Wallet'
-                  className='mx-auto'
-                />
-              ) : (
-                // <div className="space-y-6 flex flex-col items-center">
-                //   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md">
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto">
-
-                    <button
-                      onClick={() => mintNFT(true)}
-                      disabled={!isPresaleActive || minting}
-                      // className="w-full px-6 py-3 text-lg font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg shadow-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                      // className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-bold transition-all transform hover:scale-105"
-                      className={`
-                        bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 
-                        rounded-full font-bold transition-all transform hover:scale-105
-                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-                        disabled:hover:bg-blue-600
-                      `}
-                    >
-                      {minting ? (
-                        <span className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Minting...
-                        </span>
-                      ) : 'Whitelist Mint'}
-
-                      {/* >
-                      {minting ? 'Minting...' : 'Whitelist Mint'} */}
-                    </button>
-                    <button
-                      onClick={() => mintNFT(false)}
-                      //   disabled={!isPublicSaleActive || minting}
-                      //   // className="w-full px-6 py-3 text-lg font-semibold text-white bg-emerald-500 hover:bg-emerald-600 rounded-lg shadow-lg transition-all duration-200 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                      //   className="border border-white/20 hover:border-white/40 text-white px-8 py-3 rounded-full font-bold transition-all"
-                      // >
-                      //   {minting ? 'Minting...' : 'Public Mint'}
-                      disabled={!isPublicSaleActive || minting}
-                      className={`
-                      border border-white/20 hover:border-white/40 text-white 
-                      px-8 py-3 rounded-full font-bold transition-all
-                      disabled:opacity-50 disabled:cursor-not-allowed
-                      disabled:hover:border-white/20
-                    `}
-                    >
-                      {minting ? (
-                        <span className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Minting...
-                        </span>
-                      ) : 'Public Mint'}
-                    </button>
-                  </div>
+    return (
+        <div className="min-h-screen bg-black text-white flex flex-col items-center">
+            <div className="px-4 py-12 flex flex-col lg:flex-row">
+                {/* Left Column */}
+                <div className="flex-1 space-y-6 order-0 lg:order-0">
+                    <h3 className="text-4xl font-bold mb-6 tracking-tight">
+                        <span className="text-[#00FF00]">ChainBorn:</span> Unlock your
+                        <br />Genesis NFT in the
+                        <br />Abstract Ecosystem
+                    </h3>
+                    <p className="text-gray-400 text-base leading-relaxed">
+                        ChainBorn is a genesis NFT project bridging Arbitrum and Abstract Chain,
+                        designed to provide holders with exclusive benefits and future airdrops
+                        when Abstract Chain launches on mainnet.
+                    </p>
+    
+                    {/* Info Section */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-[#111827] p-4 rounded-lg">
+                            <div className="text-[#00FF00] text-lg font-bold">Items</div>
+                            <div className="text-white text-lg">{totalSupply}/{maxSupply}</div>
+                        </div>
+                        <div className="bg-[#111827] p-4 rounded-lg">
+                            <div className="text-[#00FF00] text-lg font-bold">Holders</div>
+                            <div className="text-white text-lg">{totalSupply}</div>
+                        </div>
+                        <div className="bg-[#111827] p-4 rounded-lg">
+                            <div className="text-[#00FF00] text-lg font-bold">Minting Period</div>
+                            <div className="text-white text-sm">01.17.2024 - 01.24.2024</div>
+                        </div>
+                    </div>
+    
+                    {/* NFT Image (Mobile only order adjustment) */}
+                    <div className="lg:hidden order-2">
+                        <Image
+                            src={chainbornImage}
+                            alt="Chainborn NFT"
+                            className="rounded-lg"
+                            layout="responsive"
+                            width={150}
+                            height={250}
+                        />
+                    </div>
+    
+                    <div className="bg-gray-900 p-4 rounded-lg mt-4">
+                        <div className="text-[#00FF00] text-lg font-bold">Contract Address</div>
+                        {/* <div className="text-green-500 text-sm font-mono break-all">{CONTRACT_ADDRESS}</div> */}
+                        <a 
+                  href="https://explorer.testnet.abs.xyz/address/0xF49E5C2A581baE5f849971cfE927C7619374Fc97"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-500 hover:text-green-400 text-sm font-mono break-all transition-colors"
+                >
+                  {CONTRACT_ADDRESS}
+                </a>
+                    </div>
+    
+                    {/* Mint Buttons */}
+                    <div className="space-y-4 mt-4 order-3">
+                        {!wallet ? (
+                            <ConnectWallet
+                                theme="dark"
+                                btnTitle="Connect Wallet"
+                                className="w-full !bg-green-500 hover:!bg-green-600"
+                            />
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <button
+                                    onClick={() => mintNFT(true)}
+                                    disabled={!isPresaleActive || minting}
+                                    className={`bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed w-full`}
+                                >
+                                    {minting ? 'Minting...' : 'Whitelist Mint'}
+                                </button>
+                                <button
+                                    onClick={() => mintNFT(false)}
+                                    disabled={!isPublicSaleActive || minting}
+                                    className={`border-2 border-green-500 text-green-500 px-8 py-3 rounded-lg font-bold transition-all hover:bg-green-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed w-full`}
+                                >
+                                    {minting ? 'Minting...' : 'Public Mint'}
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-              )}
-
-              {/* {error && <p className="text-red-500 mt-4">{error}</p>} */}
+    
+                {/* Right Column with NFT Image (Desktop only) */}
+                <div className="hidden lg:block flex-shrink-0 w-full max-w-xs ml-8 mr-8 mt-8">
+                    <Image
+                        src={chainbornImage}
+                        alt="Chainborn NFT"
+                        className="rounded-lg"
+                        layout="responsive"
+                        width={150}
+                        height={250}
+                    />
+                </div>
             </div>
+    
             {error && (
-              <Notification
-                message={error}
-                type="error"
-                onClose={() => setError('')}
-              />
+                <Notification message={error} type="error" onClose={() => setError('')} />
             )}
-
+    
             {isMintSuccess && (
-              // <p className="text-green-500 mt-4">
-              //   {successMintMessage}
-
-              // </p>
-              <Notification
-                message={successMintMessage}
-                type="success"
-                onClose={() => setIsMintSuccess(false)}
-              />
+                <Notification message={successMintMessage} type="success" onClose={() => setIsMintSuccess(false)} />
             )}
-          </motion.div>
-          {/* </div> */}
-        </section>
-      </motion.div>
-    </main>
-  );
+        </div>
+    );
+    
 }
-
-
-// git commit -m "Deploymet"
-// git push -u origin main

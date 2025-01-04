@@ -16,13 +16,19 @@
 }
 
 body {
+  font-family: 'Arial, sans-serif';
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+h1 {
+  color: #00FF00;
+}
+
+p {
+  color: #FFFFFF;
 }
 
 @layer utilities {
