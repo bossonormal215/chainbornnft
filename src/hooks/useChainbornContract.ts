@@ -14,6 +14,7 @@ export function useChainbornContract() {
     isPublicSaleActive: false,
     isPresaleActive: false,
     isRevealed: false,
+    totalHolders: 0,
   });
 
   useEffect(() => {
@@ -44,6 +45,8 @@ export function useChainbornContract() {
           contract.isRevealed(),
         ]);
 
+        const holders = await getHolders(contract);
+
         setContractState({
           totalSupply: totalSupply.toNumber(),
           maxSupply: maxSupply.toNumber(),
@@ -51,6 +54,7 @@ export function useChainbornContract() {
           isPublicSaleActive,
           isPresaleActive,
           isRevealed,
+          totalHolders: holders.length,
         });
       } catch (error) {
         console.error('Error fetching contract state:', error);
@@ -63,5 +67,20 @@ export function useChainbornContract() {
     return () => clearInterval(interval);
   }, [signer]);
 
+  async function getHolders(contract: any) {
+    const filter = contract.filters.Transfer(null, null);
+    const events = await contract.queryFilter(filter);
+    const holders = new Set<string>();
+    for (const event of events) {
+      const to = event.args.to;
+      if (to !== ethers.constants.AddressZero) {
+        holders.add(to);
+      }
+    }
+    return Array.from(holders);
+  }
+
   return contractState;
 }
+
+

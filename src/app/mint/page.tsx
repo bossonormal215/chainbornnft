@@ -20,7 +20,7 @@ export default function Mint() {
     const [error, setError] = useState('');
     const [isMintSuccess, setIsMintSuccess] = useState(false);
     const [successMintMessage, setSuccessMintMessage] = useState('');
-    const { isPresaleActive, isPublicSaleActive, mintPrice, totalSupply, maxSupply } = useChainbornContract();
+    const { isPresaleActive, isPublicSaleActive, mintPrice, totalSupply, maxSupply, totalHolders } = useChainbornContract();
 
     const mintNFT = async (isWhitelist: boolean) => {
         if (!wallet) {
@@ -79,7 +79,7 @@ export default function Mint() {
                         designed to provide holders with exclusive benefits and future airdrops
                         when Abstract Chain launches on mainnet.
                     </p>
-    
+
                     {/* Info Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="bg-[#111827] p-4 rounded-lg">
@@ -88,14 +88,14 @@ export default function Mint() {
                         </div>
                         <div className="bg-[#111827] p-4 rounded-lg">
                             <div className="text-[#00FF00] text-lg font-bold">Holders</div>
-                            <div className="text-white text-lg">{totalSupply}</div>
+                            <div className="text-white text-lg">{totalHolders}</div>
                         </div>
                         <div className="bg-[#111827] p-4 rounded-lg">
                             <div className="text-[#00FF00] text-lg font-bold">Minting Period</div>
                             <div className="text-white text-sm">01.17.2024 - 01.24.2024</div>
                         </div>
                     </div>
-    
+
                     {/* NFT Image (Mobile only order adjustment) */}
                     <div className="lg:hidden order-2">
                         <Image
@@ -107,20 +107,20 @@ export default function Mint() {
                             height={250}
                         />
                     </div>
-    
+
                     <div className="bg-gray-900 p-4 rounded-lg mt-4">
                         <div className="text-[#00FF00] text-lg font-bold">Contract Address</div>
                         {/* <div className="text-green-500 text-sm font-mono break-all">{CONTRACT_ADDRESS}</div> */}
-                        <a 
-                  href="https://explorer.testnet.abs.xyz/address/0xF49E5C2A581baE5f849971cfE927C7619374Fc97"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-green-500 hover:text-green-400 text-sm font-mono break-all transition-colors"
-                >
-                  {CONTRACT_ADDRESS}
-                </a>
+                        <a
+                            href="https://explorer.testnet.abs.xyz/address/0xF49E5C2A581baE5f849971cfE927C7619374Fc97"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-500 hover:text-green-400 text-sm font-mono break-all transition-colors"
+                        >
+                            {CONTRACT_ADDRESS}
+                        </a>
                     </div>
-    
+
                     {/* Mint Buttons */}
                     <div className="space-y-4 mt-4 order-3">
                         {!wallet ? (
@@ -149,7 +149,7 @@ export default function Mint() {
                         )}
                     </div>
                 </div>
-    
+
                 {/* Right Column with NFT Image (Desktop only) */}
                 <div className="hidden lg:block flex-shrink-0 w-full max-w-xs ml-8 mr-8 mt-8">
                     <Image
@@ -162,15 +162,15 @@ export default function Mint() {
                     />
                 </div>
             </div>
-    
+
             {error && (
                 <Notification message={error} type="error" onClose={() => setError('')} />
             )}
-    
+
             {isMintSuccess && (
                 <Notification message={successMintMessage} type="success" onClose={() => setIsMintSuccess(false)} />
             )}
         </div>
     );
-    
+
 }
