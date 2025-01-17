@@ -1,10 +1,22 @@
 export const CHAINBORN_CONTRACT = {
   // address: '0xb013C49AB955770B8dDdc3DFF627879998c809a6',
   // address: '0x31bc76EB53d7264f35a3F36711a741Cb26F1edD3',
-  address: '0xF49E5C2A581baE5f849971cfE927C7619374Fc97', // ABSTRACT TESTNET
+  // address: '0xF49E5C2A581baE5f849971cfE927C7619374Fc97', // ABSTRACT TESTNET
+  address: '0x249ba00BfC39468f26284225dC24F54ED330A3F0', // ABSTRACT TESTNET
   abi: [
     {
-      inputs: [],
+      inputs: [
+        {
+          internalType: 'address',
+          name: '_pythAddress',
+          type: 'address',
+        },
+        {
+          internalType: 'bytes32',
+          name: '_ethUsdPriceFeedId',
+          type: 'bytes32',
+        },
+      ],
       stateMutability: 'nonpayable',
       type: 'constructor',
     },
@@ -194,7 +206,20 @@ export const CHAINBORN_CONTRACT = {
     },
     {
       inputs: [],
-      name: 'MINT_PRICE',
+      name: 'PublicMintPrice',
+      outputs: [
+        {
+          internalType: 'uint56',
+          name: '',
+          type: 'uint56',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'WhitelistMintPrice',
       outputs: [
         {
           internalType: 'uint256',
@@ -256,6 +281,19 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
+      inputs: [],
+      name: 'ethUsdPriceFeedId',
+      outputs: [
+        {
+          internalType: 'bytes32',
+          name: '',
+          type: 'bytes32',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
       inputs: [
         {
           internalType: 'uint256',
@@ -269,6 +307,19 @@ export const CHAINBORN_CONTRACT = {
           internalType: 'address',
           name: '',
           type: 'address',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'getEthUsdPrice',
+      outputs: [
+        {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256',
         },
       ],
       stateMutability: 'view',
@@ -390,6 +441,19 @@ export const CHAINBORN_CONTRACT = {
           internalType: 'address',
           name: '',
           type: 'address',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'paused',
+      outputs: [
+        {
+          internalType: 'bool',
+          name: '',
+          type: 'bool',
         },
       ],
       stateMutability: 'view',
@@ -602,6 +666,26 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'quantity',
+          type: 'uint256',
+        },
+      ],
+      name: 'teamMint',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'togglePaused',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
       inputs: [],
       name: 'togglePresale',
       outputs: [],
@@ -731,6 +815,38 @@ export const CHAINBORN_CONTRACT = {
       name: 'unreveal',
       outputs: [],
       stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'bytes[]',
+          name: 'pythPriceUpdate',
+          type: 'bytes[]',
+        },
+      ],
+      name: 'updateAndGetEthUsdPrice',
+      outputs: [
+        {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'bytes[]',
+          name: 'pythPriceUpdate',
+          type: 'bytes[]',
+        },
+      ],
+      name: 'updatePrice',
+      outputs: [],
+      stateMutability: 'payable',
       type: 'function',
     },
     {

@@ -7,10 +7,11 @@ export function ContractStatus() {
     const {
         totalSupply,
         maxSupply,
-        mintPrice,
         isPublicSaleActive,
         isPresaleActive,
     } = useChainbornContract();
+
+    // const mintPrice = BigInt(0.012);
 
     return (
         <motion.div
@@ -34,11 +35,11 @@ export function ContractStatus() {
                 <div>
                     <p className="text-gray-400">Mint Price</p>
                     <p className="text-2xl font-bold">
-                        {mintPrice === '0' ? (
+                        {/* {mintPrice === '0' ? (
                             <span className="animate-pulse">Loading...</span>
                         ) : (
                             `${mintPrice} ETH`
-                        )}
+                        )} */}
                     </p>
                 </div>
                 <div>

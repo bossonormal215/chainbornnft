@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -8,8 +9,6 @@ import { useChainbornContract } from '@/hooks/useChainbornContract';
 import { Notification } from '@/components/Notification';
 import Image from 'next/image';
 import chainbornImage from '/src/app/images/chainborn2.png';
-import { HermesClient } from '@pythnetwork/hermes-client';
-
 
 const CONTRACT_ADDRESS = CHAINBORN_CONTRACT.address;
 const ABI = CHAINBORN_CONTRACT.abi;
@@ -23,10 +22,6 @@ export default function Mint() {
     const [successMintMessage, setSuccessMintMessage] = useState('');
     const { isPresaleActive, isPublicSaleActive, totalSupply, maxSupply, totalHolders } = useChainbornContract();
 
-    const [quantity, setQuantity] = useState(1); // State for quantity
-    const connection = new HermesClient('https://hermes.pyth.network', {});
-    const priceFeedId = ['0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',];
-
     const mintNFT = async (isWhitelist: boolean) => {
         if (!wallet) {
             setError('Please connect your wallet first.');
@@ -38,59 +33,14 @@ export default function Mint() {
             return;
         }
 
-        // Validate quantity
-        if (isWhitelist && quantity > 2) {
-            setError('Maximum mint quantity for whitelist is 2.');
-            return;
-        }
-
         setMinting(true);
         setError('');
 
         try {
-            // Latest price updates
-            const priceUpdates = await connection.getLatestPriceUpdates(priceFeedId);
-
-            // Extract the price from the price update
-            const priceFeedUpdateData1 = priceUpdates.binary.data[0];
-            const formattedPrice = `0x${priceFeedUpdateData1}`; // Prefix with 0x
-
-            // Update the price in the smart contract
             const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-            const updatePriceTx = await contract.updatePrice([formattedPrice]);
-            await updatePriceTx.wait();
-            console.log("Price updated successfully");
-
-            // Determine the mint value based on the sale type
-            const ethUsdPrice = await contract.getEthUsdPrice();
-            const whitelistMintPrice = await contract.WhitelistMintPrice();
-            const publicMintPrice = await contract.PublicMintPrice();
-            const mintValue = isWhitelist ? whitelistMintPrice : publicMintPrice;
-            console.log("Mint Price In USD: ", mintValue as any * 1e18); // Log in ETH
-            console.log("ETH PRICE: ", ethUsdPrice.toString());
-
-            // Calculate mint price in ETH
-           const ethUsdPriceNum = parseFloat(ethers.utils.formatUnits(ethUsdPrice, 2));
-           console.log("tracing: ", ethUsdPriceNum)
-           const MintPriceNum = parseFloat(
-           ethers.utils.formatUnits(mintValue, 2)
-            );
-            console.log("Tracing: ", MintPriceNum)
-           const mintPriceInEth = MintPriceNum / ethUsdPriceNum;
-            // Log the mint price in ETH
-            console.log("Mint Price in ETH:", mintPriceInEth.toFixed(3)); // Display to 3 decimals
-            const totalPriceInEth = mintPriceInEth * quantity;
-
-            console.log(
-            `Minting ${quantity} NFT(s) for ${totalPriceInEth.toFixed(3)} ETH`
-             );
-
-            // Convert to wei for the transaction
-            const totalPriceInWei = ethers.utils.parseEther(totalPriceInEth.toFixed(18));
-            console.log("Total Price In wei: ", totalPriceInWei.toString());
-
-            // Proceed with the minting transaction
-            const tx = await contract[isWhitelist ? 'whitelistMint' : 'mint'](quantity, { value: totalPriceInWei })//{ value: mintValue.mul(quantity) }); // Multiply mintValue by quantity
+            const mintPrice = '0.015'
+            const mintValue = ethers.utils.parseEther(mintPrice);
+            const tx = await contract[isWhitelist ? 'whitelistMint' : 'mint'](1, { value: mintValue });
             await tx.wait(1);
             setIsMintSuccess(true);
             setSuccessMintMessage('Successfully Minted A New CHAINBORN NFT');
@@ -147,18 +97,6 @@ export default function Mint() {
                         </div>
                     </div>
 
-                    {/* status message */}
-                    <div className="flex gap-4 text-xs">
-                <div className="flex items-center gap-1">
-                  <div className={`w-2 h-2 rounded-full ${isPresaleActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                  <span className="text-gray-400">Presale: {isPresaleActive ? 'Minting' : 'Not Live'}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className={`w-2 h-2 rounded-full ${isPublicSaleActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                  <span className="text-gray-400">Public Sale: {isPublicSaleActive ? 'Minting' : 'Not Live'}</span>
-                </div>
-              </div>
-
                     {/* NFT Image (Mobile only order adjustment) */}
                     <div className="lg:hidden order-2">
                         <Image
@@ -171,24 +109,16 @@ export default function Mint() {
                         />
                     </div>
 
-                     {/* Quantity Input */}
-                     <div className="flex items-center space-x-2">
-                        <label htmlFor="quantity" className="text-sm">Quantity:</label>
-                        <input
-                            type="number"
-                            id="quantity"
-                            value={quantity}
-                            onChange={(e) => setQuantity(Math.max(1, Math.min(10, Number(e.target.value))))} // Limit quantity between 1 and 10
-                            
-                            className="w-16 h-6 rounded bg-white text-black text-sm px-2 text-center "
-                            min="1"
-                            max="10"
-                        />
-                    </div>
-
                     <div className="bg-gray-900 p-4 rounded-lg mt-4">
                         <div className="text-[#00FF00] text-lg font-bold">Contract Address</div>
-                        <div className="text-green-500 text-sm font-mono break-all">{CONTRACT_ADDRESS}</div>
+                        <a
+                            href="https://explorer.testnet.abs.xyz/address/0xF49E5C2A581baE5f849971cfE927C7619374Fc97"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-500 hover:text-green-400 text-sm font-mono break-all transition-colors"
+                        >
+                            {CONTRACT_ADDRESS}
+                        </a>
                     </div>
 
                     {/* Mint Buttons */}
@@ -242,4 +172,5 @@ export default function Mint() {
             )}
         </div>
     );
+
 }

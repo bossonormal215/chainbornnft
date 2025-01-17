@@ -6,11 +6,12 @@ import { useSigner } from '@thirdweb-dev/react';
 export function useChainbornContract() {
   // const wallet = useAddress();
   const signer = useSigner();
-  
+
   const [contractState, setContractState] = useState({
     totalSupply: 0,
     maxSupply: 0,
-    mintPrice: '0',
+    whitelistMintPrice: '0',
+    publicMintPrice: '0',
     isPublicSaleActive: false,
     isPresaleActive: false,
     isRevealed: false,
@@ -21,8 +22,10 @@ export function useChainbornContract() {
     async function fetchContractState() {
       try {
         // Use a public RPC provider when no wallet is connected
-        const provider = signer || new ethers.providers.JsonRpcProvider("https://api.testnet.abs.xyz");
-        
+        const provider =
+          signer ||
+          new ethers.providers.JsonRpcProvider('https://api.testnet.abs.xyz');
+
         const contract = new ethers.Contract(
           CHAINBORN_CONTRACT.address,
           CHAINBORN_CONTRACT.abi,
@@ -32,14 +35,16 @@ export function useChainbornContract() {
         const [
           totalSupply,
           maxSupply,
-          mintPrice,
+          whitelistMintPrice,
+          publicMintPrice,
           isPublicSaleActive,
           isPresaleActive,
           isRevealed,
         ] = await Promise.all([
           contract.totalSupply(),
           contract.MAX_SUPPLY(),
-          contract.MINT_PRICE(),
+          contract.WhitelistMintPrice(),
+          contract.PublicMintPrice(),
           contract.isPublicSaleActive(),
           contract.isPresaleActive(),
           contract.isRevealed(),
@@ -50,7 +55,8 @@ export function useChainbornContract() {
         setContractState({
           totalSupply: totalSupply.toNumber(),
           maxSupply: maxSupply.toNumber(),
-          mintPrice: ethers.utils.formatEther(mintPrice),
+          whitelistMintPrice: ethers.utils.formatEther(whitelistMintPrice),
+          publicMintPrice: ethers.utils.formatEther(publicMintPrice),
           isPublicSaleActive,
           isPresaleActive,
           isRevealed,
@@ -82,5 +88,3 @@ export function useChainbornContract() {
 
   return contractState;
 }
-
-

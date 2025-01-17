@@ -21,7 +21,7 @@ export default function Mint() {
   const [error, setError] = useState('');
   const [isMintSuccess, setIsMintSuccess] = useState(false);
   const [successMintMessage, setSuccessMintMessage] = useState('')
-  const { isPresaleActive, isPublicSaleActive, mintPrice } = useChainbornContract()
+  const { isPresaleActive, isPublicSaleActive } = useChainbornContract()
 
   const mintNFT = async (isWhitelist: boolean) => {
     if (!wallet) {
@@ -44,6 +44,7 @@ export default function Mint() {
       const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
       let tx;
+      const mintPrice = '0.015'
       const mintValue = ethers.utils.parseEther(mintPrice);
       if (isWhitelist) {
         // tx = await contract.whitelistMint(1, { value: ethers.utils.parseEther('0.03001') });
