@@ -2,7 +2,7 @@ export const CHAINBORN_CONTRACT = {
   // address: '0xb013C49AB955770B8dDdc3DFF627879998c809a6',
   // address: '0x31bc76EB53d7264f35a3F36711a741Cb26F1edD3',
   // address: '0xF49E5C2A581baE5f849971cfE927C7619374Fc97', // ABSTRACT TESTNET
-  address: '0x249ba00BfC39468f26284225dC24F54ED330A3F0', // ABSTRACT TESTNET
+  address: '0xe80943A8b0De20F4716d0c16aF1D0dD00349cf1a', // ABSTRACT TESTNET
   abi: [
     {
       inputs: [
@@ -157,6 +157,25 @@ export const CHAINBORN_CONTRACT = {
       anonymous: false,
       inputs: [
         {
+          indexed: false,
+          internalType: 'string',
+          name: 'saleType',
+          type: 'string',
+        },
+        {
+          indexed: false,
+          internalType: 'bool',
+          name: 'state',
+          type: 'bool',
+        },
+      ],
+      name: 'SaleStateChanged',
+      type: 'event',
+    },
+    {
+      anonymous: false,
+      inputs: [
+        {
           indexed: true,
           internalType: 'address',
           name: 'from',
@@ -209,12 +228,51 @@ export const CHAINBORN_CONTRACT = {
       name: 'PublicMintPrice',
       outputs: [
         {
-          internalType: 'uint56',
+          internalType: 'uint256',
           name: '',
-          type: 'uint56',
+          type: 'uint256',
         },
       ],
       stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [],
+      name: 'TEAM_SUPPLY',
+      outputs: [
+        {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256',
+        },
+      ],
+      stateMutability: 'view',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'quantity',
+          type: 'uint256',
+        },
+      ],
+      name: 'TeamMint',
+      outputs: [],
+      stateMutability: 'payable',
+      type: 'function',
+    },
+    {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'quantity',
+          type: 'uint256',
+        },
+      ],
+      name: 'TeamOGMint',
+      outputs: [],
+      stateMutability: 'nonpayable',
       type: 'function',
     },
     {
@@ -460,6 +518,24 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
+      inputs: [
+        {
+          internalType: 'uint256',
+          name: 'start',
+          type: 'uint256',
+        },
+        {
+          internalType: 'uint256',
+          name: 'end',
+          type: 'uint256',
+        },
+      ],
+      name: 'removeTokenIds',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
       inputs: [],
       name: 'renounceOwnership',
       outputs: [],
@@ -666,19 +742,6 @@ export const CHAINBORN_CONTRACT = {
       type: 'function',
     },
     {
-      inputs: [
-        {
-          internalType: 'uint256',
-          name: 'quantity',
-          type: 'uint256',
-        },
-      ],
-      name: 'teamMint',
-      outputs: [],
-      stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
       inputs: [],
       name: 'togglePaused',
       outputs: [],
@@ -815,25 +878,6 @@ export const CHAINBORN_CONTRACT = {
       name: 'unreveal',
       outputs: [],
       stateMutability: 'nonpayable',
-      type: 'function',
-    },
-    {
-      inputs: [
-        {
-          internalType: 'bytes[]',
-          name: 'pythPriceUpdate',
-          type: 'bytes[]',
-        },
-      ],
-      name: 'updateAndGetEthUsdPrice',
-      outputs: [
-        {
-          internalType: 'uint256',
-          name: '',
-          type: 'uint256',
-        },
-      ],
-      stateMutability: 'payable',
       type: 'function',
     },
     {
